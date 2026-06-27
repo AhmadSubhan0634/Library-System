@@ -1,5 +1,5 @@
 <?php
-require_once 'App/Entities/LibraryBook.php';
+require_once __DIR__ . '/..' . '/Entities/LibraryBook.php';
 class Library {
 
 	private $books=array();
