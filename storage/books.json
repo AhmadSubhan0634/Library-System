@@ -1,1 +1,23 @@
-
+[
+    {
+        "title": "a",
+        "author": "a",
+        "isbn": "2",
+        "category": "r",
+        "year": 3
+    },
+    {
+        "title": "a",
+        "author": "a",
+        "isbn": "3",
+        "category": "a",
+        "year": 0
+    },
+    {
+        "title": "7 wonders",
+        "author": "ahmad subhan",
+        "isbn": "7",
+        "category": "goat",
+        "year": 2026
+    }
+]

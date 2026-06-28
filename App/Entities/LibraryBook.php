@@ -1,52 +1,79 @@
 <?php
-class LibraryBook extends Book{
 
-	// Default Constructor
-	public function __construct() {
-        parent:: __construct();
+namespace App\Entities;
+
+require_once __DIR__ . '/Book.php';
+
+class LibraryBook extends Book
+{
+    public function __construct(
+        string $title = "",
+        string $author = "",
+        string $ISBN = "",
+        string $category = "",
+        int $year = 0
+    ) {
+        parent::__construct($title, $author, $ISBN, $category, $year);
     }
 
-	public function UpdateTitle() {
-		echo "Enter new title of the book: ";
-		$newTitle = readline();
-        echo"<br>";
-		$this->setTitle($newTitle);
-	}
+    public function updateTitle(): void
+    {
+        echo "Enter new title: ";
+        $this->setTitle(trim(fgets(STDIN)));
+    }
 
-	public function UpdateAuthor() {
-		echo "Enter new name of the author of book: ";
-		$newAuthor = readline();
-        echo"<br>";
-		$this->setAuthor($newAuthor);
-	}
+    public function updateAuthor(): void
+    {
+        echo "Enter new author: ";
+        $this->setAuthor(trim(fgets(STDIN)));
+    }
 
-	public function UpdateCategory() {
-		echo "Enter new category of the book: ";
-		$newCategory = readline();
-        echo"<br>";
-		$this->setCategory($newCategory);
-	}
+    public function updateCategory(): void
+    {
+        echo "Enter new category: ";
+        $this->setCategory(trim(fgets(STDIN)));
+    }
 
-	public function updateYear() {
-		echo "Enter updated year of the book:";
-		$newYear = (int)readline();
-        echo"<br>";
-		$this->setYear($newYear);
-	}
+    public function updateYear(): void
+    {
+        echo "Enter new year: ";
+        $this->setYear((int) trim(fgets(STDIN)));
+    }
 
-	public function updateISBN() {
-		echo "Enter new ISBN of the book: ";
-		$newISBN = (int)readline();
-        echo"<br>";
-		$this->setISBN($newISBN);
-	}
+    public function updateISBN(): void
+    {
+        echo "Enter new ISBN: ";
+        $this->setISBN(trim(fgets(STDIN)));
+    }
 
-	public function PrintBook() {
-		echo "Title of the book is: " . $this->getTitle() . "<br>";
-		echo "Author of the book is: " . $this->getAuthor() . "<br>";
-		echo "ISBN of the book is: " . $this->getISBN() . "<br>";
-		echo "Category of the book is: " . $this->getCategory() . "<br>";
-		echo "Year of publish of book is: " . $this->getYear() . "<br>";
-	}
+    public function printBook(): void
+    {
+        echo "Title:    " . $this->getTitle()    . "\n";
+        echo "Author:   " . $this->getAuthor()   . "\n";
+        echo "ISBN:     " . $this->getISBN()     . "\n";
+        echo "Category: " . $this->getCategory() . "\n";
+        echo "Year:     " . $this->getYear()     . "\n";
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'title'    => $this->getTitle(),
+            'author'   => $this->getAuthor(),
+            'isbn'     => $this->getISBN(),
+            'category' => $this->getCategory(),
+            'year'     => $this->getYear(),
+        ];
+    }
+
+    public static function fromArray(array $data): self
+    {
+        return new self(
+            $data['title'],
+            $data['author'],
+            $data['isbn'],
+            $data['category'],
+            (int) $data['year']
+        );
+    }
 }
-?>
