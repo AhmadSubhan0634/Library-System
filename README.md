@@ -19,6 +19,7 @@ books.json
 App Folder:
 <br>
 1. Contracts: Book Repository Interface
+Define the contracts what must a book storage system be able to do
 <br>
 2. Entities:
 <br>
@@ -26,6 +27,8 @@ App Folder:
 2. LibraryBook containing the functions(changes) that can happen to book in the library.
 <br>
 3. Repositories:JsonBookRepository.php
+Implementation of the interface. It does the real work of storing and retrieving books from books.json.
+
 <br>
 # Services:
 <br>
