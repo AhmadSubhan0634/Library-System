@@ -2,16 +2,9 @@
     {
         "title": "a",
         "author": "a",
-        "isbn": "2",
-        "category": "r",
-        "year": 3
-    },
-    {
-        "title": "a",
-        "author": "a",
         "isbn": "3",
         "category": "a",
-        "year": 0
+        "year": 2005
     },
     {
         "title": "7 wonders",
@@ -19,5 +12,12 @@
         "isbn": "7",
         "category": "goat",
         "year": 2026
+    },
+    {
+        "title": "matrix",
+        "author": "ask",
+        "isbn": "666",
+        "category": "freedom",
+        "year": 2020
     }
 ]

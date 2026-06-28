@@ -14,33 +14,34 @@ class JsonBookRepository implements BookRepositoryInterface
 {
     private string $filePath;
 
-    public function __construct(string $filePath)
-    {
+    public function __construct(string $filePath){
         $this->filePath = $filePath;
     }
 
-    private function readAll(): array
-    {
+    private function readAll(): array{
         if (!file_exists($this->filePath)) {
             return [];
         }
         $json = file_get_contents($this->filePath);
-        return json_decode($json, true) ?? [];
+        $result=json_decode($json,true);
+        if($result===NULL){
+            return [];
+        }
+        else{
+            return $result;
+        }
     }
 
-    private function writeAll(array $books): void
-    {
+    private function writeAll(array $books): void{
         file_put_contents($this->filePath, json_encode($books, JSON_PRETTY_PRINT));
     }
 
-    public function getAll(): array
-    {
+    public function getAll(): array{
         $data = $this->readAll();
         return array_map(fn($b) => LibraryBook::fromArray($b), $data);
     }
 
-    public function findByISBN(string $isbn): ?Book
-    {
+    public function findByISBN(string $isbn): ?Book{
         foreach ($this->readAll() as $book) {
             if ($book['isbn'] === $isbn) {
                 return LibraryBook::fromArray($book);
@@ -49,8 +50,7 @@ class JsonBookRepository implements BookRepositoryInterface
         return null;
     }
 
-    public function findByTitle(string $title): array
-    {
+    public function findByTitle(string $title): array{
         $results = [];
         foreach ($this->readAll() as $book) {
             if (stripos($book['title'], $title) !== false) {
@@ -60,15 +60,13 @@ class JsonBookRepository implements BookRepositoryInterface
         return $results;
     }
 
-    public function save(Book $book): void
-    {
+    public function save(Book $book): void{
         $books   = $this->readAll();
         $books[] = $book->toArray();
         $this->writeAll($books);
     }
 
-    public function update(string $isbn, array $data): bool
-    {
+    public function update(string $isbn, array $data): bool{
         $books = $this->readAll();
         foreach ($books as &$book) {
             if ($book['isbn'] === $isbn) {
@@ -84,8 +82,7 @@ class JsonBookRepository implements BookRepositoryInterface
         return false;
     }
 
-    public function delete(string $isbn): bool
-    {
+    public function delete(string $isbn): bool{
         $books    = $this->readAll();
         $filtered = array_filter($books, fn($b) => $b['isbn'] !== $isbn);
         if (count($filtered) === count($books)) {

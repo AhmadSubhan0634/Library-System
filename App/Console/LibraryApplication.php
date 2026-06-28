@@ -4,12 +4,10 @@ namespace App\Console;
 
 use App\Services\LibraryService;
 
-class LibraryApplication
-{
+class LibraryApplication{
     private LibraryService $service;
 
-    public function __construct(LibraryService $service)
-    {
+    public function __construct(LibraryService $service){
         $this->service = $service;
     }
 
@@ -83,7 +81,7 @@ class LibraryApplication
 
         foreach ($books as $i => $book) {
 // CORRECT - using getters
-        echo ($i + 1) . ". " . $book->getTitle() . " by " . $book->getAuthor() . " ISBN of book is: " . $book->getISBN() . " Category of book is:" . $book->getCategory() . ".Year of publish of book was: " . $book->getYear() . "\n"; }
+        echo ($i + 1) . ". " . $book->getTitle() . " by author " . $book->getAuthor() . " .\nISBN of book is: " . $book->getISBN() . " .\nCategory of book is:" . $book->getCategory() . ".\nYear of publish of book was: " . $book->getYear() . "\n\n"; }
     }
 
     private function searchBook(): void{
@@ -108,12 +106,14 @@ class LibraryApplication
         $category = $this->input("Enter new Category of the book: ");
         $yearStr = $this->input("Enter new Year of publication of the book: ");
 
-        $data = [
-            'title'    => $title,
-            'author'   => $author,
-            'category' => $category,
-            'year'     => $yearStr !== '' ? (int) $yearStr : '',
+        $data=[
+            'title'=>$title,
+            'author'=> $author,
+            'category'=> $category
         ];
+        if($yearStr!==''){
+            $data['year']=(int)$yearStr;
+        }
 
         $message = $this->service->updateBook($isbn, $data);
         echo $message . "\n";

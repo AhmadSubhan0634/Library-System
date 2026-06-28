@@ -10,19 +10,16 @@ use App\Contracts\BookRepositoryInterface;
 use App\Entities\Book;
 use App\Entities\LibraryBook;
 
-class LibraryService
-{
+class LibraryService{
     private BookRepositoryInterface $repo;
 
-    public function __construct(BookRepositoryInterface $repo)
-    {
+    public function __construct(BookRepositoryInterface $repo){
         $this->repo = $repo;
     }
 
-    public function addBook(string $title, string $author, string $isbn, string $category, int $year): string
-    {
+    public function addBook(string $title, string $author, string $isbn, string $category, int $year): string{
         if ($this->repo->findByISBN($isbn) !== null) {
-            return "Error: A book with ISBN '$isbn' already exists.";
+            return " A book with ISBN '$isbn' already exists.";
         }
         $book = new LibraryBook($title, $author, $isbn, $category, $year);
         $this->repo->save($book);
