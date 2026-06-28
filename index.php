@@ -14,7 +14,7 @@ use App\Console\LibraryApplication;
 $storagePath = __DIR__ . '/storage/books.json';
 
 $repository = new JsonBookRepository($storagePath);
-$service    = new LibraryService($repository);
-$app        = new LibraryApplication($service);
+$service = new LibraryService($repository);
+$app = new LibraryApplication($service);
 
 $app->run();
