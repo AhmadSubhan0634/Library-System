@@ -62,3 +62,4 @@ alter table books add constraint c2 foreign key(category_id) references category
 alter table books add constraint c3 unique(isbn);
 alter table authors add constraint c4 unique(email);
 alter table borrow_records add constraint c5 foreign key(book_id) references books(id);
+alter table borrow_records add constraint c6 foreign key(borrower_id) references borrowers(id);
