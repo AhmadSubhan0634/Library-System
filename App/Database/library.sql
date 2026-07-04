@@ -32,3 +32,15 @@ description varchar(100),
 created_at date,
 updated_at date
 );
+
+/* Borrower table */
+create table borrowers(
+id int primary key,
+name varchar(50) not null,
+email varchar(50) not null,
+phone varchar(15),
+address varchar(100) not null,
+created_at date,
+updated_at date
+);
+ 
