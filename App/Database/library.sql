@@ -55,3 +55,6 @@ status varchar(10),
 created_at date,
 updated_at date
 );
+
+/* Alter statements to add constraints */
+alter table books add constraint c1 foreign key(author_id) references authors(id);
