@@ -13,3 +13,13 @@ category_id int,
 created_at date,
 updated_at date
 );
+
+/* Authors table */
+create table authors(
+id int primary key,
+name varchar(50) not null,
+email varchar(50) not null,
+country varchar(50) not null,
+created_at date,
+updated_at date
+);
