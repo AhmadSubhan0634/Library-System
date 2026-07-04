@@ -44,3 +44,14 @@ created_at date,
 updated_at date
 );
  
+/* Table for borrowed books */
+create table borrow_records(
+id int primary key,
+book_id int,
+borrower_id int,
+borrow_date date,
+return_date date,
+status varchar(10),
+created_at date,
+updated_at date
+);
