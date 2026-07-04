@@ -59,3 +59,4 @@ updated_at date
 /* Alter statements to add constraints */
 alter table books add constraint c1 foreign key(author_id) references authors(id);
 alter table books add constraint c2 foreign key(category_id) references category(id);
+alter table books add constraint c3 unique(isbn);
