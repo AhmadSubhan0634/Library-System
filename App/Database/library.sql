@@ -23,3 +23,12 @@ country varchar(50) not null,
 created_at date,
 updated_at date
 );
+
+/* Category table */
+create table category(
+id int primary key,
+name varchar(50) not null,
+description varchar(100),
+created_at date,
+updated_at date
+);
