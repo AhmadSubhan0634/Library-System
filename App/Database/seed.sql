@@ -1,7 +1,7 @@
 use Library_System;
 
 /* Authors */
-insert into authors (id, name, email, country, created_at, updated_at) values
+insert into authors (name, email, country, created_at, updated_at) values
 ('Ahmad', 'ahmad@gmail.com', 'Pakistan', '2024-01-01', '2024-01-01'),
 ('Subhan', 'subhan@gmail.com', 'Pakistan', '2024-01-01', '2024-01-01'),
 ('Ali', 'ali@gmail.com', 'England', '2024-01-01', '2024-01-01'),
@@ -14,7 +14,7 @@ insert into authors (id, name, email, country, created_at, updated_at) values
 ( 'Mustafa', 'mustafa@mail.com', 'Canada', '2024-01-01', '2024-01-01');
 
 /* Category */
-insert into category (id, name, description, created_at, updated_at) values
+insert into category (name, description, created_at, updated_at) values
 ('Technology', 'Advancement and modernization', '2024-01-01', '2024-01-01'),
 ('Computer Science', 'Information about hardware and software', '2024-01-01', '2024-01-01'),
 ('Engineering', 'Information about different types of engineering', '2024-01-01', '2024-01-01'),
@@ -22,7 +22,7 @@ insert into category (id, name, description, created_at, updated_at) values
 ('History', 'Culture,Tradition and customs', '2024-01-01', '2024-01-01');
 
 /* Books */
-insert into books (id, title, isbn, published_year, author_id, category_id, created_at, updated_at) values
+insert into books (title, isbn, published_year, author_id, category_id, created_at, updated_at) values
 ('The Code Book', '1', '1990-01-01', 10, 1, '2024-01-01', '2024-01-01'),
 ('Sapiens', '2', '1995-01-01', 9, 1, '2024-01-01', '2024-01-01'),
 ('The Shallows', '3', '1981-01-01', 8, 1, '2024-01-01', '2024-01-01'),
@@ -55,7 +55,7 @@ insert into books (id, title, isbn, published_year, author_id, category_id, crea
 ( 'The Silk Roads', '30', '1965-01-01', 1, 5, '2024-01-01', '2024-01-01');
 
 /* Borrowers */
-insert into borrowers (id, name, email, phone, address, created_at, updated_at) values
+insert into borrowers (name, email, phone, address, created_at, updated_at) values
 ('Moosa', 'moosa@gmail.com', '03001234567', 'house no 1,Garhi Shaw', '2024-01-01', '2024-01-01'),
 ('Usman', 'usman@gmail.com', '03011234567', 'house no 1,Garhi Shaw', '2024-01-01', '2024-01-01'),
 ('Sheharyar', 'sheharyar@gmail.com', '03004192830', 'house no 2,Park View', '2024-01-01', '2024-01-01'),
@@ -68,7 +68,7 @@ insert into borrowers (id, name, email, phone, address, created_at, updated_at) 
 ( 'Adil', 'adil@gmail.com', '03091234567', 'House no 9,Iqbal Town', '2024-01-01', '2024-01-01');
 
 /* Borrow Records */
-insert into borrow_records (id, book_id, borrower_id, borrow_date, return_date, status, created_at, updated_at) values
+insert into borrow_records (book_id, borrower_id, borrow_date, return_date, status, created_at, updated_at) values
 (1, 1, '2024-02-01', '2024-02-10', 'returned', '2024-02-01', '2024-02-10'),
 (2, 2, '2024-02-02', '2024-02-11', 'returned', '2024-02-02', '2024-02-11'),
 (3, 3, '2024-02-03', '2024-02-10', 'borrowed', '2024-02-03', '2024-02-03'),
