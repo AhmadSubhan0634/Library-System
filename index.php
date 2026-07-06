@@ -3,17 +3,19 @@
 require_once __DIR__ . '/App/Entities/Book.php';
 require_once __DIR__ . '/App/Entities/LibraryBook.php';
 require_once __DIR__ . '/App/Contracts/BookRepositoryInterface.php';
-require_once __DIR__ . '/App/Repositories/JsonBookRepository.php';
+require_once __DIR__ . '/App/Database/Database.php';
+require_once __DIR__ . '/App/Repositories/mysqlBookRepository.php';
 require_once __DIR__ . '/App/Services/LibraryService.php';
 require_once __DIR__ . '/App/Console/LibraryApplication.php';
 
-use App\Repositories\JsonBookRepository;
+use App\Database\Database;
+use App\Repositories\mysqlBookRepository;
 use App\Services\LibraryService;
 use App\Console\LibraryApplication;
 
-$storagePath = __DIR__ . '/storage/books.json';
+$database= new Database();
 
-$repository = new JsonBookRepository($storagePath);
+$repository = new mysqlBookRepository($database);
 $service = new LibraryService($repository);
 $app = new LibraryApplication($service);
 
