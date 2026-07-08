@@ -3,11 +3,11 @@
 namespace App\Entities;
 
 class Book{
-    public string $title;
-    public string $author;
-    public string $ISBN;
-    public string $category;
-    public int $year;
+    private string $title;
+    private string $author;
+    private string $ISBN;
+    private string $category;
+    private int $year;
 
     // Default constructor
     public function __construct(string $title = "",string $author = "",string $ISBN = "",string $category = "",int $year = 0) {
