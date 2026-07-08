@@ -60,11 +60,31 @@ class LibraryApplication{
 
     private function addBook(): void{
         echo "-- Add Book --\n";
+
+        do{
         $title = $this->input("Enter title of the book: ");
+        if($title==""){echo "Enter a valid title of a book.\n";}
+        }while($title=="");
+
+        do{
         $author = $this->input("Enter author of the book: ");
+        if($author==""){echo "Enter a valid name of author.\n";}
+        }while($author=="");
+
+        do{
         $isbn = $this->input("Enter ISBN of the book: ");
+        if($isbn==""){echo "Enter a valid ISBN.\n";}
+        }while($isbn=="");
+
+        do{
         $category = $this->input("Enter category of the book: ");
+        if($category==""){echo "Enter a valid category of book.\n";}
+        }while($category=="");
+
+        do{
         $year = (int) $this->input("Enter year of publication of the book: ");
+        if($year>2026 or $year<1200){ echo "Enter a valid year for publish of book.\n";}
+        }while($year>2026 or $year<1200);
 
         $message = $this->service->addBook($title, $author, $isbn, $category, $year);
         echo $message . "\n";
