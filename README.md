@@ -5,7 +5,7 @@
 The Library Management System is a PHP console application developed using Object-Oriented Programming (OOP) principles. It allows users to manage books, authors, categories, borrowers, and borrowing records.
 
 # Change from json file to mysql
- In this version, the storage mechanism has been migrated to a MySQL database while keeping the business logic unchanged to show the Repository Design Pattern, where only the repository implementation changes without affecting the service layer.
+In this version, the storage mechanism has been migrated to a MySQL database while keeping the business logic unchanged to show the Repository Design Pattern, where only the repository implementation changes without affecting the service layer.
 
 ---
 
@@ -58,6 +58,7 @@ app/
 └── README.md
 
 index.php
+```
 
 ---
 
@@ -144,7 +145,6 @@ Foreign Keys
 
 # ER Diagram
 
-
 Relationships
 
 - One Author can write many Books.
@@ -176,7 +176,65 @@ The database is normalized to Third Normal Form (3NF).
 
 
 ### Boyce-Codd Normal Form (BCNF)
+
+- Every determinant in each table is a candidate key.
+- isbn is enforced as UNIQUE in the Books table, so no non-key determinant introduces anomalies.
+
 ---
+
+# Architecture
+
+The application is layered into three parts: LibraryApplication (console entry point), LibraryService (business logic), and a repository layer accessed only through BookRepositoryInterface. LibraryApplication and LibraryService depend only on the interface, not on a concrete repository.
+
+## Repository Pattern
+
+The application follows the Repository Pattern.
+
+```
+LibraryApplication
+        │
+        v
+   LibraryService
+        │
+        v
+BookRepositoryInterface
+        │
+        ├── JsonBookRepository
+        └── MySqlBookRepository
+```
+
+The business logic depends only on the interface.
+
+Changing the storage mechanism does not require changes to:
+
+- LibraryService
+- LibraryApplication
+- BookRepositoryInterface
+
+Only the repository implementation changes.
+
+## Database Connection
+
+The project uses a dedicated Database class.
+
+```php
+class Database
+{
+    public function getConnection(): PDO
+}
+```
+
+The class creates a reusable PDO connection with proper error handling.
+
+---
+
+# Installation
+
+## 1. Requirements
+
+- PHP 8.x
+- MySQL Server
+- MySQL command line client
 
 ## 2. Create the database
 
@@ -225,6 +283,25 @@ php index.php
 ```
 ---
 
+# Usage
+
+Once running, the console displays a menu of operations. Choose an option by entering its number and pressing Enter:
+
+- Add a new book
+- View all books
+- Search books
+- Update book information
+- Delete a book
+- Manage authors
+- Manage categories
+- Manage borrowers
+- Borrow a book
+- Return a book
+
+The application reads from and writes to MySQL through MySqlBookRepository, so any changes made are persisted in the database.
+
+---
+
 # SQL Files
 
 ## library.sql
@@ -236,7 +313,6 @@ Contains
 - PRIMARY KEY
 - FOREIGN KEY
 - UNIQUE Constraints
-- INDEXES
 
 ---
 
@@ -266,39 +342,6 @@ Contains solutions for:
 - Overdue books
 - Books in each category
 - Last five borrowed books
-
----
-
-# Repository Pattern
-
-The application follows the Repository Pattern.
-
-```
-
-The business logic depends only on the interface.
-
-Changing the storage mechanism does not require changes to:
-
-- LibraryService
-- LibraryApplication
-- BookRepositoryInterface
-
-Only the repository implementation changes.
-
----
-
-# Database Connection
-
-The project uses a dedicated Database class.
-
-```php
-class Database
-{
-    public function getConnection(): PDO
-}
-```
-
-The class creates a reusable PDO connection with proper error handling.
 
 ---
 
