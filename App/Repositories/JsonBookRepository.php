@@ -4,14 +4,13 @@ namespace App\Repositories;
 
 require_once __DIR__ . '/../Contracts/BookRepositoryInterface.php';
 require_once __DIR__ . '/../Entities/Book.php';
-require_once __DIR__ . '/../Entities/LibraryBook.php';
+require_once __DIR__ . '/../Mappers/BookMapper.php';
 
 use App\Contracts\BookRepositoryInterface;
 use App\Entities\Book;
-use App\Entities\LibraryBook;
+use App\Mappers\BookMapper;
 
-class JsonBookRepository implements BookRepositoryInterface
-{
+class JsonBookRepository implements BookRepositoryInterface{
     private string $filePath;
 
     public function __construct(string $filePath){
@@ -23,13 +22,11 @@ class JsonBookRepository implements BookRepositoryInterface
             return [];
         }
         $json = file_get_contents($this->filePath);
-        $result=json_decode($json,true);
-        if($result===NULL){
+        $result = json_decode($json, true);
+        if ($result === null) {
             return [];
         }
-        else{
-            return $result;
-        }
+        return $result;
     }
 
     private function writeAll(array $books): void{
@@ -38,13 +35,13 @@ class JsonBookRepository implements BookRepositoryInterface
 
     public function getAll(): array{
         $data = $this->readAll();
-        return array_map(fn($b) => LibraryBook::fromArray($b), $data);
+        return array_map(fn($b) => BookMapper::fromArray($b), $data);
     }
 
     public function findByISBN(string $isbn): ?Book{
         foreach ($this->readAll() as $book) {
             if ($book['isbn'] === $isbn) {
-                return LibraryBook::fromArray($book);
+                return BookMapper::fromArray($book);
             }
         }
         return null;
@@ -54,7 +51,7 @@ class JsonBookRepository implements BookRepositoryInterface
         $results = [];
         foreach ($this->readAll() as $book) {
             if (stripos($book['title'], $title) !== false) {
-                $results[] = LibraryBook::fromArray($book);
+                $results[] = BookMapper::fromArray($book);
             }
         }
         return $results;
@@ -62,7 +59,7 @@ class JsonBookRepository implements BookRepositoryInterface
 
     public function save(Book $book): void{
         $books   = $this->readAll();
-        $books[] = $book->toArray();
+        $books[] = BookMapper::toArray($book);
         $this->writeAll($books);
     }
 
