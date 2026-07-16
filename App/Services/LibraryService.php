@@ -4,11 +4,9 @@ namespace App\Services;
 
 require_once __DIR__ . '/../Contracts/BookRepositoryInterface.php';
 require_once __DIR__ . '/../Entities/Book.php';
-require_once __DIR__ . '/../Entities/LibraryBook.php';
 
 use App\Contracts\BookRepositoryInterface;
 use App\Entities\Book;
-use App\Entities\LibraryBook;
 
 class LibraryService{
     private BookRepositoryInterface $repo;
@@ -18,10 +16,10 @@ class LibraryService{
     }
 
     public function addBook(string $title, string $author, string $isbn, string $category, int $year): string{
-        if ($this->repo->findByISBN($isbn) !== null) {
+        if ($this->repo->findByisbn($isbn) !== null) {
             return " A book with ISBN '$isbn' already exists.";
         }
-        $book = new LibraryBook($title, $author, $isbn, $category, $year);
+        $book = new Book($title, $author, $isbn, $category, $year);
         $this->repo->save($book);
         return "Book '$title' added successfully.";
     }
@@ -36,14 +34,23 @@ class LibraryService{
         return $this->repo->findByTitle($title);
     }
 
-    public function searchByISBN(string $isbn): ?Book
+    public function searchByisbn(string $isbn): ?Book
     {
-        return $this->repo->findByISBN($isbn);
+        return $this->repo->findByisbn($isbn);
     }
 
-    public function updateBook(string $isbn, array $data): string
-    {
-        $updated = $this->repo->update($isbn, $data);
+    public function updateBook(string $isbn, array $data): string{
+        $book = $this->repo->findByIsbn($isbn);
+        if ($book === null) {
+            return "No book found with isbn '$isbn'.";
+        }
+
+        if (!empty($data['title'])){ $book->setTitle($data['title']); }
+        if (!empty($data['author'])){ $book->setAuthor($data['author']); }
+        if (!empty($data['category'])) { $book->setCategory($data['category']); }
+        if (!empty($data['year'])){ $book->setYear((int) $data['year']); }
+
+        $updated = $this->repo->update($book);
         return $updated
             ? "Book updated successfully."
             : "Error: No book found with ISBN '$isbn'.";

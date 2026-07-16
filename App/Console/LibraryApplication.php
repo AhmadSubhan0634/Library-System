@@ -21,19 +21,24 @@ class LibraryApplication{
 
             switch ($choice) {
                 case '1':
-                    $this->addBook();
+                    try { $this->addBook(); }
+                    catch (\Throwable $e) { echo "Error Occured: " . $e->getMessage() . "\n"; }
                     break;
                 case '2':
-                    $this->listBooks();  
+                    try { $this->listBooks(); }
+                    catch (\Throwable $e) { echo "Error Occured: " . $e->getMessage() . "\n"; }
                     break;
                 case '3': 
-                    $this->searchBook(); 
+                    try { $this->searchBook(); }
+                    catch (\Throwable $e) { echo "Error Occured: " . $e->getMessage() . "\n"; }
                     break;
                 case '4': 
-                    $this->updateBook(); 
+                    try { $this->updateBook(); }
+                    catch (\Throwable $e) { echo "Error Occured: " . $e->getMessage() . "\n"; }
                     break;
                 case '5': 
-                    $this->deleteBook(); 
+                    try { $this->deleteBook(); }
+                    catch (\Throwable $e) { echo "Error Occured: " . $e->getMessage() . "\n"; }
                     break;
                 case '6':
                     echo "Goodbye!\n";
@@ -72,7 +77,7 @@ class LibraryApplication{
         }while($author=="");
 
         do{
-        $isbn = $this->input("Enter ISBN of the book: ");
+        $isbn = $this->input("Enter isbn of the book: ");
         if($isbn==""){echo "Enter a valid ISBN.\n";}
         }while($isbn=="");
 
@@ -83,8 +88,8 @@ class LibraryApplication{
 
         do{
         $year = (int) $this->input("Enter year of publication of the book: ");
-        if($year>2026 or $year<1200){ echo "Enter a valid year for publish of book.\n";}
-        }while($year>2026 or $year<1200);
+        if($year>2027 or $year<1200){ echo "Enter a valid year for publish of book.\n";}
+        }while($year>2027 or $year<1200);
 
         $message = $this->service->addBook($title, $author, $isbn, $category, $year);
         echo $message . "\n";
@@ -92,7 +97,13 @@ class LibraryApplication{
 
     private function listBooks(): void{
         echo "\n-- Book List --\n";
-        $books = $this->service->listBooks();
+
+        try {
+            $books = $this->service->listBooks();
+        } catch (\RuntimeException $e) {
+            echo "Failed to load books (" . $e->getMessage() . ").\n";
+            return;
+        }
 
         if (empty($books)) {
             echo "No books found.\n";
@@ -101,14 +112,20 @@ class LibraryApplication{
 
         foreach ($books as $i => $book) {
 // CORRECT - using getters
-        echo ($i + 1) . ". " . $book->getTitle() . " by author " . $book->getAuthor() . " .\nISBN of book is: " . $book->getISBN() . " .\nCategory of book is:" . $book->getCategory() . ".\nYear of publish of book was: " . $book->getYear() . "\n\n"; }
+        echo ($i + 1) . ". " . $book->getTitle() . " by author " . $book->getAuthor() . " .\nISBN of book is: " . $book->getisbn() . " .\nCategory of book is:" . $book->getCategory() . ".\nYear of publish of book was: " . $book->getYear() . "\n\n"; }
     }
 
     private function searchBook(): void{
         echo "\n-- Search Book --\n";
 
-        $isbn = $this->input("Enter ISBN: ");
-        $book = $this->service->searchByISBN($isbn);
+        $isbn = $this->input("Enter isbn: ");
+        try {
+            $book = $this->service->searchByisbn($isbn);
+        } catch (\RuntimeException $e) {
+            echo "Failed to search for book (" . $e->getMessage() . ").\n";
+            return;
+        }
+
         if ($book === null) {
             echo "No book is available in the library with that ISBN.\n";
         } else {
@@ -118,7 +135,7 @@ class LibraryApplication{
 
     private function updateBook(): void{
         echo "\n-- Update Book --\n";
-        $isbn = $this->input("Enter ISBN of book to update: ");
+        $isbn = $this->input("Enter isbn of book to update: ");
 
         echo "Leave blank to keep current value.\n";
         $title = $this->input("Enter new Title of the book: ");
@@ -141,7 +158,7 @@ class LibraryApplication{
 
     private function deleteBook(): void{
         echo "\n-- Delete Book --\n";
-        $isbn = $this->input("Enter ISBN of book to delete: ");
+        $isbn = $this->input("Enter isbn of book to delete: ");
         $message = $this->service->deleteBook($isbn);
         echo $message . "\n";
     }

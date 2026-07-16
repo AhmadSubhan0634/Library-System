@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Mappers;
 
-require_once __DIR__ . '/../Entities/Book/php';
+require_once __DIR__ . '/../Entities/Book.php';
 use App\Entities\Book;
 
 class BookMapper{
@@ -10,7 +10,7 @@ class BookMapper{
         return [
             'title'=>$book->getTitle(),
             'author'=>$book->getAuthor(),
-            'isbn'=>$book->getISBN(),
+            'isbn'=>$book->getisbn(),
             'category'=>$book->getCategory(),
             'year'=>$book->getYear(),
         ];

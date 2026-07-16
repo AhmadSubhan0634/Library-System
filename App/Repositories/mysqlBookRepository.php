@@ -4,13 +4,11 @@ namespace App\Repositories;
 
 require_once __DIR__ . '/../Contracts/BookRepositoryInterface.php';
 require_once __DIR__ . '/../Entities/Book.php';
-require_once __DIR__ . '/../Entities/LibraryBook.php';
 require_once __DIR__ . '/../Database/Database.php';
 
 use App\Contracts\BookRepositoryInterface;
 use App\Database\Database;
 use App\Entities\Book;
-use App\Entities\LibraryBook;
 use PDO;
 
 class MySqlBookRepository implements BookRepositoryInterface{
@@ -28,7 +26,7 @@ class MySqlBookRepository implements BookRepositoryInterface{
         return array_map([$this,'hydrate'],$statement->fetchAll());
     }
 
-    public function findByISBN(string $isbn):?Book{
+    public function findByisbn(string $isbn):?Book{
         $statement=$this->pdo->prepare(self::SELECT_BASE." where b.isbn=:isbn");
         $statement->execute(['isbn'=>$isbn]);
         $row=$statement->fetch();
@@ -88,49 +86,30 @@ class MySqlBookRepository implements BookRepositoryInterface{
         $category_id=$this->findOrCreateCategory($book->getCategory());
         $statement=$this->pdo->prepare("insert into books (title, isbn, published_year, author_id, category_id, created_at, updated_at) values (:title, :isbn, :published_year, :author_id, :category_id, CURDATE(), CURDATE())");
         
-        $statement->execute(['title'=>$book->getTitle(),'isbn'=>$book->getISBN(),'published_year'=>$this->yearToDate($book->getYear()),'author_id'=>$author_id,'category_id'=>$category_id,]);
+        $statement->execute(['title'=>$book->getTitle(),'isbn'=>$book->getisbn(),'published_year'=>$this->yearToDate($book->getYear()),'author_id'=>$author_id,'category_id'=>$category_id,]);
     }
 
-        public function update(string $isbn, array $data): bool{
-        $fields = [];
-        $params = ['isbn' => $isbn];
- 
-        if (array_key_exists('title', $data) && $data['title'] !== '') {
-            $fields[] = 'title = :title';
-            $params['title'] = $data['title'];
-        }
- 
-        if (array_key_exists('author', $data) && $data['author'] !== '') {
-            $fields[] = 'author_id = :author_id';
-            $params['author_id'] = $this->findOrCreateAuthor($data['author']);
-        }
- 
-        if (array_key_exists('category', $data) && $data['category'] !== '') {
-            $fields[] = 'category_id = :category_id';
-            $params['category_id'] = $this->findOrCreateCategory($data['category']);
-        }
- 
-        if (array_key_exists('year', $data) && $data['year'] !== '') {
-            $fields[] = 'published_year = :published_year';
-            $params['published_year'] = $this->yearToDate((int) $data['year']);
-        }
- 
-        if (empty($fields)) {
-            return false;
-        }
- 
-        $fields[] = 'updated_at = CURDATE()';
- 
-        $sql = "UPDATE books SET " . implode(', ', $fields) . " WHERE isbn = :isbn";
-        $statement = $this->pdo->prepare($sql);
-        $statement->execute($params);
- 
-        return $statement->rowCount() > 0;
-    }
+    public function update(Book $book): bool{
+    $author_id = $this->findOrCreateAuthor($book->getAuthor());
+    $category_id = $this->findOrCreateCategory($book->getCategory());
 
-    public function hydrate(array $row): LibraryBook{
+    $statement = $this->pdo->prepare(
+        "UPDATE books SET title = :title, author_id = :author_id, category_id = :category_id, published_year = :published_year, updated_at = CURDATE() WHERE isbn = :isbn"
+    );
+    $statement->execute([
+        'title' => $book->getTitle(),
+        'author_id' => $author_id,
+        'category_id' => $category_id,
+        'published_year' => $this->yearToDate($book->getYear()),
+        'isbn' => $book->getIsbn(),
+    ]);
+
+    return $statement->rowCount() > 0;
+}
+
+    public function hydrate(array $row): Book{
         $year=$row['pub_year']?(int)$row['pub_year']:0;
-        return new LibraryBook($row['title'],$row['author_name']??'',$row['isbn'],$row['category_name']??'',$year);
+        return new Book($row['title'],$row['author_name']??'',$row['isbn'],$row['category_name']??'',$year);
         }
 }
 ?>

@@ -21,16 +21,34 @@ class JsonBookRepository implements BookRepositoryInterface{
         if (!file_exists($this->filePath)) {
             return [];
         }
+
         $json = file_get_contents($this->filePath);
-        $result = json_decode($json, true);
-        if ($result === null) {
+        if ($json === false) {
+            throw new \RuntimeException("Failed to read book data file: {$this->filePath}");
+        }
+
+        if (trim($json) === '') {
             return [];
         }
-        return $result;
+
+        $result = json_decode($json, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new \RuntimeException("Failed to parse book data file '{$this->filePath}': " . json_last_error_msg());
+        }
+
+        return $result ?? [];
     }
 
     private function writeAll(array $books): void{
-        file_put_contents($this->filePath, json_encode($books, JSON_PRETTY_PRINT));
+        $json = json_encode($books, JSON_PRETTY_PRINT);
+        if ($json === false) {
+            throw new \RuntimeException("Failed to encode book data: " . json_last_error_msg());
+        }
+
+        $written = file_put_contents($this->filePath, $json);
+        if ($written === false) {
+            throw new \RuntimeException("Failed to write book data file: {$this->filePath}");
+        }
     }
 
     public function getAll(): array{
@@ -38,7 +56,7 @@ class JsonBookRepository implements BookRepositoryInterface{
         return array_map(fn($b) => BookMapper::fromArray($b), $data);
     }
 
-    public function findByISBN(string $isbn): ?Book{
+    public function findByisbn(string $isbn): ?Book{
         foreach ($this->readAll() as $book) {
             if ($book['isbn'] === $isbn) {
                 return BookMapper::fromArray($book);
@@ -63,20 +81,16 @@ class JsonBookRepository implements BookRepositoryInterface{
         $this->writeAll($books);
     }
 
-    public function update(string $isbn, array $data): bool{
-        $books = $this->readAll();
-        foreach ($books as &$book) {
-            if ($book['isbn'] === $isbn) {
-                foreach ($data as $key => $value) {
-                    if (array_key_exists($key, $book) && $value !== '') {
-                        $book[$key] = $value;
-                    }
-                }
-                $this->writeAll($books);
-                return true;
-            }
+    public function update(Book $book): bool{
+    $books = $this->readAll();
+    foreach ($books as $index => $existing) {
+        if ($existing['isbn'] === $book->getIsbn()) {
+            $books[$index] = BookMapper::toArray($book);
+            $this->writeAll($books);
+            return true;
         }
-        return false;
+    }
+    return false;
     }
 
     public function delete(string $isbn): bool{
